@@ -7,7 +7,7 @@
         "device": "*"
     },
     "files": [
-        "makecode-wall-check"
+        "custom.ts"
     ],
     "preferredEditor": "tsprj"
 }
