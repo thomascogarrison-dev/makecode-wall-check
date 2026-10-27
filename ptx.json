@@ -1,0 +1,13 @@
+
+{
+    "name": "wall-check",
+    "version": "0.0.1",
+    "description": "Check whether sprites can see each other through walls",
+    "dependencies": {
+        "device": "*"
+    },
+    "files": [
+        "makecode-wall-check"
+    ],
+    "preferredEditor": "tsprj"
+}
