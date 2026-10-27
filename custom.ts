@@ -1,6 +1,21 @@
+/**
+ * Custom blocks for checking whether sprites can see each other.
+ */
+
+/**
+ * Wall checks
+ */
 //% weight=100 color=#440055 icon="\uf0c1"
 namespace WallCheck {
-
+    /**
+     * Returns true if a wall tile blocks the line between two sprites.
+     * @param first first sprite
+     * @param second second sprite
+     */
+    //% block="wall between $first and $second"
+    //% blockId=wallcheck_between_sprites
+    //% first.shadow=variables_get
+    //% second.shadow=variables_get
     export function isWallBetween(first: Sprite, second: Sprite): boolean {
         const dx = second.x - first.x
         const dy = second.y - first.y
@@ -30,6 +45,19 @@ namespace WallCheck {
         return false
     }
 
+    /**
+     * Runs the code inside whenever sprites of these kinds have a clear line of sight.
+     * This checks all pairs each game update, not just sprites that physically overlap.
+     * @param kind first sprite kind
+     * @param otherKind second sprite kind
+     * @param handler code to run when there is no wall between them
+     */
+    //% block="on $sprite of kind $kind sees $otherSprite of kind $otherKind"
+    //% blockId=wallcheck_on_sees
+    //% kind.shadow=spritekind
+    //% otherKind.shadow=spritekind
+    //% draggableParameters
+    //% handlerStatement=1
     export function onSees(
         kind: number,
         otherKind: number,
