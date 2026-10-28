@@ -1,7 +1,7 @@
 
 {
     "name": "wall-check",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Check whether sprites can see each other through walls",
     "dependencies": {
         "device": "*"
