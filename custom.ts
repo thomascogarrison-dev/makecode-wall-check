@@ -45,24 +45,16 @@ namespace WallCheck {
         return false
     }
 
-    /**
-     * Runs the code inside whenever sprites of these kinds have a clear line of sight.
-     * This checks all pairs each game update, not just sprites that physically overlap.
-     * @param kind first sprite kind
-     * @param otherKind second sprite kind
-     * @param handler code to run when there is no wall between them
-     */
-    //% block="on $sprite of kind $kind sees $otherSprite of kind $otherKind"
+/**
+ * Runs code whenever sprites of these kinds have a clear line of sight.
+ * @param kind first sprite kind
+ * @param otherKind second sprite kind
+ * @param handler code to run
+ */
+//% block="on $sprite of kind $kind sees $otherSprite of kind $otherKind"
 //% blockAllowMultiple=1
 //% draggableParameters
-//% handlerStatement
-    //% block="on $sprite of kind $kind sees $otherSprite of kind $otherKind"
-    //% blockId=wallcheck_on_sees
-    //% kind.shadow=spritekind
-    //% otherKind.shadow=spritekind
-    //% draggableParameters
-    //% handlerStatement=1
-    export function onSees(
+export function onSees(
         kind: number,
         otherKind: number,
         handler: (sprite: Sprite, otherSprite: Sprite) => void
