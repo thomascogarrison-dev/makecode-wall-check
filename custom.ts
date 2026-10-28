@@ -53,6 +53,10 @@ namespace WallCheck {
      * @param handler code to run when there is no wall between them
      */
     //% block="on $sprite of kind $kind sees $otherSprite of kind $otherKind"
+//% blockAllowMultiple=1
+//% draggableParameters
+//% handlerStatement
+    //% block="on $sprite of kind $kind sees $otherSprite of kind $otherKind"
     //% blockId=wallcheck_on_sees
     //% kind.shadow=spritekind
     //% otherKind.shadow=spritekind
