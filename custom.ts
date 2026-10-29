@@ -17,6 +17,7 @@ namespace WallCheck {
     //% first.shadow=variables_get
     //% second.shadow=variables_get
 
+
 export function isWallBetween(first: Sprite, second: Sprite): boolean {
     const tileSize = 16
 
@@ -27,11 +28,14 @@ export function isWallBetween(first: Sprite, second: Sprite): boolean {
         return false
     }
 
-    let tileX = Math.floor(first.x / tileSize)
-    let tileY = Math.floor(first.y / tileSize)
+    const startX = Math.floor(first.x / tileSize)
+    const startY = Math.floor(first.y / tileSize)
 
     const endX = Math.floor(second.x / tileSize)
     const endY = Math.floor(second.y / tileSize)
+
+    let tileX = startX
+    let tileY = startY
 
     const stepX = dx > 0 ? 1 : -1
     const stepY = dy > 0 ? 1 : -1
@@ -46,7 +50,8 @@ export function isWallBetween(first: Sprite, second: Sprite): boolean {
         ((stepY > 0 ? (tileY + 1) * tileSize : tileY * tileSize) - first.y) / dy
 
     function isWall(x: number, y: number): boolean {
-        if ((x === tileX && y === tileY) ||
+        // Ignore only the actual starting and ending tiles.
+        if ((x === startX && y === startY) ||
             (x === endX && y === endY)) {
             return false
         }
@@ -58,17 +63,11 @@ export function isWallBetween(first: Sprite, second: Sprite): boolean {
 
     while (tileX !== endX || tileY !== endY) {
 
-        // The ray crosses a tile corner.
         if (Math.abs(maxX - maxY) < 0.0000001) {
 
-            // Check both tiles touching that corner.
-            if (isWall(tileX + stepX, tileY)) {
-                return true
-            }
-
-            if (isWall(tileX, tileY + stepY)) {
-                return true
-            }
+            // Check both tiles beside the corner.
+            if (isWall(tileX + stepX, tileY)) return true
+            if (isWall(tileX, tileY + stepY)) return true
 
             tileX += stepX
             tileY += stepY
@@ -76,32 +75,27 @@ export function isWallBetween(first: Sprite, second: Sprite): boolean {
             maxX += deltaX
             maxY += deltaY
 
-            if (isWall(tileX, tileY)) {
-                return true
-            }
+            if (isWall(tileX, tileY)) return true
 
         } else if (maxX < maxY) {
 
             tileX += stepX
             maxX += deltaX
 
-            if (isWall(tileX, tileY)) {
-                return true
-            }
+            if (isWall(tileX, tileY)) return true
 
         } else {
 
             tileY += stepY
             maxY += deltaY
 
-            if (isWall(tileX, tileY)) {
-                return true
-            }
+            if (isWall(tileX, tileY)) return true
         }
     }
 
     return false
 }
+
 
 
 /**
