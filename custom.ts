@@ -16,34 +16,93 @@ namespace WallCheck {
     //% blockId=wallcheck_between_sprites
     //% first.shadow=variables_get
     //% second.shadow=variables_get
-    export function isWallBetween(first: Sprite, second: Sprite): boolean {
-        const dx = second.x - first.x
-        const dy = second.y - first.y
-        const distance = Math.sqrt(dx * dx + dy * dy)
 
-        if (distance < 1) {
+export function isWallBetween(first: Sprite, second: Sprite): boolean {
+    const tileSize = 16
+
+    const dx = second.x - first.x
+    const dy = second.y - first.y
+
+    if (dx === 0 && dy === 0) {
+        return false
+    }
+
+    let tileX = Math.floor(first.x / tileSize)
+    let tileY = Math.floor(first.y / tileSize)
+
+    const endX = Math.floor(second.x / tileSize)
+    const endY = Math.floor(second.y / tileSize)
+
+    const stepX = dx > 0 ? 1 : -1
+    const stepY = dy > 0 ? 1 : -1
+
+    const deltaX = dx === 0 ? Infinity : tileSize / Math.abs(dx)
+    const deltaY = dy === 0 ? Infinity : tileSize / Math.abs(dy)
+
+    let maxX = dx === 0 ? Infinity :
+        ((stepX > 0 ? (tileX + 1) * tileSize : tileX * tileSize) - first.x) / dx
+
+    let maxY = dy === 0 ? Infinity :
+        ((stepY > 0 ? (tileY + 1) * tileSize : tileY * tileSize) - first.y) / dy
+
+    function isWall(x: number, y: number): boolean {
+        if ((x === tileX && y === tileY) ||
+            (x === endX && y === endY)) {
             return false
         }
 
-        const steps = Math.ceil(distance / 4)
+        return tiles.tileAtLocationIsWall(
+            tiles.getTileLocation(x, y)
+        )
+    }
 
-        for (let i = 1; i < steps; i++) {
-            const t = i / steps
-            const px = first.x + dx * t
-            const py = first.y + dy * t
+    while (tileX !== endX || tileY !== endY) {
 
-            const location = tiles.getTileLocation(
-                Math.floor(px / 16),
-                Math.floor(py / 16)
-            )
+        // The ray crosses a tile corner.
+        if (Math.abs(maxX - maxY) < 0.0000001) {
 
-            if (tiles.tileAtLocationIsWall(location)) {
+            // Check both tiles touching that corner.
+            if (isWall(tileX + stepX, tileY)) {
+                return true
+            }
+
+            if (isWall(tileX, tileY + stepY)) {
+                return true
+            }
+
+            tileX += stepX
+            tileY += stepY
+
+            maxX += deltaX
+            maxY += deltaY
+
+            if (isWall(tileX, tileY)) {
+                return true
+            }
+
+        } else if (maxX < maxY) {
+
+            tileX += stepX
+            maxX += deltaX
+
+            if (isWall(tileX, tileY)) {
+                return true
+            }
+
+        } else {
+
+            tileY += stepY
+            maxY += deltaY
+
+            if (isWall(tileX, tileY)) {
                 return true
             }
         }
-
-        return false
     }
+
+    return false
+}
+
 
 /**
  * Runs code whenever sprites of these kinds have a clear line of sight.
